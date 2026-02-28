@@ -1,3 +1,58 @@
+.rethink-sans-ExtraBold,
+.rethink-sans-bold,
+.rethink-sans-medium,
+.rethink-sans-regular,
+.rethink-sans-semiBold {
+    font-family: "Sora", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal
+}
+:root {
+    --default-font: "Sora", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --heading-font: "Sora", sans-serif;
+    --nav-font: "Sora", sans-serif;
+    --background-color: #10131C;
+    --default-color: #FFF;
+    --text-color: #10131C;
+    --cta-background-color: #FF7A1D;
+    --nav-hover-color: #ffffff;
+    --social-links-color: #10131C;
+    --social-links-background-color: #CBFF4D;
+    --background-color-white: #ffffff;
+    --background-color-grey: #F8F9FC;
+    --background-color-dark: #10131C;
+    --background-color-grey-medium: #9FA2B2;
+    --background-color-client: #F5F5F5;
+    --background-color-trust-whi: #F4F4F4;
+    --color-white: #ffffff;
+    --color-blue: #10131C;
+    --emphasis-color: #FF7A1D;
+    scroll-behavior: smooth
+}
+
+.green-color {
+    background-color: var(--social-links-background-color);
+}
+
+.rethink-sans-regular {
+    font-weight: 400
+}
+
+.rethink-sans-medium {
+    font-weight: 500
+}
+
+.rethink-sans-semiBold {
+    font-weight: 600
+}
+
+.rethink-sans-bold {
+    font-weight: 700
+}
+
+.rethink-sans-ExtraBold {
+    font-weight: 800
+}
 /* Reset básico */
 body, html {
     margin:0;
