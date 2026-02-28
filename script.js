@@ -1,23 +1,40 @@
 gsap.registerPlugin(ScrollTrigger);
+
 //////////////////////////////////////////////////////
-// LENIS
+// LENIS SMOOTH SCROLL
 //////////////////////////////////////////////////////
 const lenis = new Lenis({
     duration: 1.2,
     smooth: true
 });
 
+// RAF para Lenis
 function raf(time) {
     lenis.raf(time);
     requestAnimationFrame(raf);
 }
 requestAnimationFrame(raf);
+
+// Atualiza ScrollTrigger ao rolar com Lenis
+lenis.on("scroll", ScrollTrigger.update);
+gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+});
+gsap.ticker.lagSmoothing(0);
+
 //////////////////////////////////////////////////////
-// THREE JS
+// THREE JS SETUP
 //////////////////////////////////////////////////////
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+const camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+);
 camera.position.z = 5;
+
 const renderer = new THREE.WebGLRenderer({
     antialias: true,
     alpha: true
@@ -25,6 +42,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.getElementById("webgl").appendChild(renderer.domElement);
+
 //////////////////////////////////////////////////////
 // PARTICLES
 //////////////////////////////////////////////////////
@@ -34,20 +52,24 @@ const positions = new Float32Array(count * 3);
 for (let i = 0; i < count * 3; i++) {
     positions[i] = (Math.random() - 0.5) * 60;
 }
-particlesGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+particlesGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+
 const particlesMaterial = new THREE.PointsMaterial({
     color: 0xCBFF4D,
     size: 0.03,
     transparent: true,
     opacity: 0.8
 });
+
 const particles = new THREE.Points(particlesGeometry, particlesMaterial);
 scene.add(particles);
+
 //////////////////////////////////////////////////////
-// SCROLL CAMERA
+// CAMERA SCROLL MOVEMENT
 //////////////////////////////////////////////////////
 gsap.to(camera.position, {
     z: -30,
+    ease: "none",
     scrollTrigger: {
         trigger: ".content",
         start: "top top",
@@ -55,12 +77,13 @@ gsap.to(camera.position, {
         scrub: 1
     }
 });
+
 //////////////////////////////////////////////////////
 // MOUSE PARALLAX
 //////////////////////////////////////////////////////
 window.addEventListener("mousemove", (e) => {
-    let x = (e.clientX / window.innerWidth - 0.5);
-    let y = (e.clientY / window.innerHeight - 0.5);
+    const x = (e.clientX / window.innerWidth - 0.5);
+    const y = (e.clientY / window.innerHeight - 0.5);
     gsap.to(camera.rotation, {
         y: x * 0.3,
         x: y * 0.3,
@@ -68,49 +91,33 @@ window.addEventListener("mousemove", (e) => {
         ease: "power2.out"
     });
 });
+
 //////////////////////////////////////////////////////
-// ESTADO INICIAL LOGO + PRELOAD
+// INITIAL STATES
 //////////////////////////////////////////////////////
-gsap.set("#logo-fixed", {
-    opacity: 0
-});
-gsap.set("#header-ui", {
-    opacity: 0
-});
-gsap.set("#logo-container", {
-    scale: 0.8
-});
-gsap.set("#letter-W", {
-    y: -750,
-    opacity: 0
-});
-gsap.set("#letter-I", {
-    y: -750,
-    opacity: 0
-});
-gsap.set("#letter-H", {
-    y: 750,
-    opacity: 0
-});
-gsap.set("#preloader-fill", {
-    width: "0%"
-});
-gsap.set("#logo-bg", {
-    opacity: 1
-});
+gsap.set("#logo-fixed", { opacity: 0 });
+gsap.set("#header-ui", { opacity: 0 });
+gsap.set("#scroll-indicator", { opacity: 0, y: 20 });
+gsap.set("#logo-container", { scale: 0.8 });
+gsap.set("#letter-W", { y: -750, opacity: 0 });
+gsap.set("#letter-I", { y: -750, opacity: 0 });
+gsap.set("#letter-H", { y: 750, opacity: 0 });
+gsap.set("#preloader-fill", { width: "0%" });
+gsap.set("#logo-bg", { opacity: 1 });
+
 //////////////////////////////////////////////////////
-// TIMELINE MASTER (PRELOAD + LOGO SINCRONIZADOS)
+// INTRO TIMELINE
 //////////////////////////////////////////////////////
-const introTimeline = gsap.timeline({
-    paused: true
-});
-// PROGRESS BAR
+const introTimeline = gsap.timeline({ paused: true });
+
+// progress bar
 introTimeline.to("#preloader-fill", {
     width: "100%",
     duration: 3,
     ease: "power1.out"
 }, 0);
-// LETRAS W e I entram DURANTE preload
+
+// letters animation
 introTimeline.to(["#letter-W", "#letter-I"], {
     y: 0,
     opacity: 1,
@@ -118,56 +125,60 @@ introTimeline.to(["#letter-W", "#letter-I"], {
     ease: "power3.out",
     stagger: 0.15
 }, 0.4);
-// H entra DURANTE preload
+
 introTimeline.to("#letter-H", {
     y: 0,
     opacity: 1,
     duration: 1.2,
     ease: "power3.out"
 }, 0.9);
-// SCALE FINAL
+
+// logo scale
 introTimeline.to("#logo-container", {
     scale: 1,
     duration: 0.8,
     ease: "elastic.out(1,0.5)"
 }, 1.6);
-// FADE PRELOADER BAR
+
+// subtitle
+introTimeline.to("#web-text", {
+    opacity: 1,
+    y: 0,
+    duration: 1,
+    ease: "power2.out"
+}, 1.8);
+
+// hide preloader
 introTimeline.to("#preloader", {
     opacity: 0,
-    duration: 0.6,
-    ease: "power2.out"
+    duration: 0.6
 }, 2.5);
-// FADE FUNDO COMPLETO
+
+// hide logo bg
 introTimeline.to("#logo-bg", {
     opacity: 0,
     duration: 1,
     ease: "power4.inOut"
 }, 2.7);
-// SHOW UI
-introTimeline.to("#header-ui", {
-    opacity: 1,
-    duration: 1,
-    ease: "power2.out"
-}, 2.9);
-introTimeline.to("#logo-fixed", {
-    opacity: 1,
-    duration: 1,
-    ease: "power2.out"
-}, 2.9);
-// REMOVE BG COMPLETAMENTE
-introTimeline.set("#logo-bg", {
-    display: "none"
-});
+
+// show UI
+introTimeline.to("#header-ui", { opacity: 1, duration: 1 }, 2.9);
+introTimeline.to("#logo-fixed", { opacity: 1, duration: 1 }, 2.9);
+
+// show scroll indicator
+introTimeline.to("#scroll-indicator", { opacity: 1, y: 0, duration: 1, ease: "power2.out" }, 3.1);
+
+// remove bg after intro
+introTimeline.set("#logo-bg", { display: "none" });
+
+// start intro on load
+window.addEventListener("load", () => { introTimeline.play(); });
+
 //////////////////////////////////////////////////////
-// START TIMELINE NO LOAD
-//////////////////////////////////////////////////////
-window.addEventListener("load", () => {
-    introTimeline.play();
-});
-//////////////////////////////////////////////////////
-// TEXT CINEMATIC
+// CINEMATIC PANELS
 //////////////////////////////////////////////////////
 const panels = document.querySelectorAll(".panel");
+
 let masterTimeline = gsap.timeline({
     scrollTrigger: {
         trigger: ".content",
@@ -177,31 +188,37 @@ let masterTimeline = gsap.timeline({
         pin: true
     }
 });
+
 panels.forEach(panel => {
     const lines = panel.querySelectorAll(".line");
     const tl = gsap.timeline();
-    tl.fromTo(lines, {
-        y: 120,
-        opacity: 0,
-        filter: "blur(15px)"
-    }, {
-        y: 0,
-        opacity: 1,
-        filter: "blur(0px)",
-        duration: 1.4,
-        stagger: 0.15,
-        ease: "power3.out"
-    });
-    tl.to(lines, {
-        y: -120,
-        opacity: 0,
-        filter: "blur(10px)",
-        duration: 1,
-        stagger: 0.1,
-        ease: "power3.in"
-    }, "+=1.2");
+
+    tl.fromTo(lines,
+        { y: 120, opacity: 0, filter: "blur(15px)" },
+        { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, stagger: 0.15, ease: "power3.out" }
+    );
+
+    tl.to(lines,
+        { y: -120, opacity: 0, filter: "blur(10px)", duration: 1, stagger: 0.1, ease: "power3.in" },
+        "+=1.2"
+    );
+
     masterTimeline.add(tl);
 });
+
+//////////////////////////////////////////////////////
+// HIDE SCROLL INDICATOR ON SCROLL
+//////////////////////////////////////////////////////
+ScrollTrigger.create({
+    trigger: ".content",
+    start: "top top",
+    end: "top+=300 top",
+    scrub: true,
+    onUpdate: self => {
+        gsap.to("#scroll-indicator", { opacity: 0, y: 40, duration: 0.3, ease: "power2.out" });
+    }
+});
+
 //////////////////////////////////////////////////////
 // RENDER LOOP
 //////////////////////////////////////////////////////
@@ -212,6 +229,7 @@ function animate() {
     renderer.render(scene, camera);
 }
 animate();
+
 //////////////////////////////////////////////////////
 // RESIZE
 //////////////////////////////////////////////////////
