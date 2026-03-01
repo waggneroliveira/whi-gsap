@@ -195,6 +195,40 @@ body, html {
     padding-right:10%;
 }
 
+/* Texto lateral */
+.side-text {
+    position: absolute;
+    max-width: 400px;
+    color: white;
+    opacity: 0;
+    filter: blur(10px);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    line-height: 1.4;
+}
+
+/* Linha conectando text-block ao side-text */
+.line-connector {
+    position: absolute; /* deixa livre para posicionar */
+    width: 200px; /* comprimento da linha */
+    height: 2px; /* espessura */
+    background: var(--social-links-background-color);
+    transform-origin: left center; /* ponto de rotação */
+}
+/* Posicionamento lateral conforme panel */
+.panel-1 .side-text, .panel-3 .side-text {
+    top: 25%;
+    left: 63%;
+    transform: translateY(-50%);
+}
+
+.panel-2 .side-text, .panel-4 .side-text {
+    top: 25%;
+    right: 63%;
+    transform: translateY(-50%);
+}
+
 /* Logo inicial */
 #logo-bg {
     position:fixed;

@@ -191,17 +191,37 @@ let masterTimeline = gsap.timeline({
 
 panels.forEach(panel => {
     const lines = panel.querySelectorAll(".line");
+    const sideText = panel.querySelector(".side-text");
     const tl = gsap.timeline();
 
+    // animação do text-block
     tl.fromTo(lines,
         { y: 120, opacity: 0, filter: "blur(15px)" },
         { y: 0, opacity: 1, filter: "blur(0px)", duration: 1.4, stagger: 0.15, ease: "power3.out" }
     );
 
+    // animação do texto lateral
+    if(sideText) {
+        tl.fromTo(sideText, 
+            { x: panel.classList.contains("panel-2") || panel.classList.contains("panel-4") ? 100 : -100, opacity: 0, filter: "blur(10px)" },
+            { x: 0, opacity: 1, filter: "blur(0px)", duration: 1.2, ease: "power3.out" },
+            "-=1" // começa junto com linhas
+        );
+    }
+
+    // animação de saída do text-block
     tl.to(lines,
         { y: -120, opacity: 0, filter: "blur(10px)", duration: 1, stagger: 0.1, ease: "power3.in" },
         "+=1.2"
     );
+
+    // animação de saída do texto lateral
+    if(sideText){
+        tl.to(sideText, 
+            { x: panel.classList.contains("panel-2") || panel.classList.contains("panel-4") ? 100 : -100, opacity: 0, filter: "blur(10px)", duration: 1, ease: "power3.in" },
+            "-=1" // sai junto com linhas
+        );
+    }
 
     masterTimeline.add(tl);
 });
