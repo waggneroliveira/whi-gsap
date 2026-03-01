@@ -168,7 +168,7 @@ body, html {
     display:flex;
     flex-direction:column;
     gap:12px;
-    max-width:900px;
+    max-width:700px;
 }
 
 .line{
@@ -208,14 +208,6 @@ body, html {
     line-height: 1.4;
 }
 
-/* Linha conectando text-block ao side-text */
-.line-connector {
-    position: absolute; /* deixa livre para posicionar */
-    width: 200px; /* comprimento da linha */
-    height: 2px; /* espessura */
-    background: var(--social-links-background-color);
-    transform-origin: left center; /* ponto de rotação */
-}
 /* Posicionamento lateral conforme panel */
 .panel-1 .side-text, .panel-3 .side-text {
     top: 25%;
@@ -227,6 +219,36 @@ body, html {
     top: 25%;
     right: 63%;
     transform: translateY(-50%);
+}
+
+/* base */
+.arrow-right,
+.arrow-left {
+    position: absolute;
+    top: 25%;
+    transform: translateY(-50%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* seta apontando para direita (panel 2 e 4) */
+.panel-2 .arrow-right,
+.panel-4 .arrow-right {
+    right: 48%;
+}
+
+/* seta apontando para esquerda (panel 1 e 3) */
+.panel-1 .arrow-left,
+.panel-3 .arrow-left {
+    left: 48%;
+}
+
+/* linha da seta */
+.arrow-right path,
+.arrow-left path {
+    stroke-width: 2;
+    stroke-dasharray: 120;
+    stroke-dashoffset: 120;
 }
 
 /* Logo inicial */
